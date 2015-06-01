@@ -61,12 +61,11 @@ func main() {
 		os.Exit(1)
 	}
 	logging.SetBackend(logging.NewBackendFormatter(backend, formatter))
-	logger.SetLogger(log)
 
 	router := web.New(Context{}). // Create your router
-					Middleware(logger.LoggerMiddleware).  // Use some included middleware
-					Middleware(web.ShowErrorsMiddleware). // ...
-					Middleware((*Context).SetHelloCount). // Your own middleware!
-					Get("/", (*Context).SayHello)         // Add a route
+					Middleware(logger.LoggerMiddlewareFactory(log)). // Use some included middleware
+					Middleware(web.ShowErrorsMiddleware).            // ...
+					Middleware((*Context).SetHelloCount).            // Your own middleware!
+					Get("/", (*Context).SayHello)                    // Add a route
 	http.ListenAndServe(listenAddress, router) // Start the server!
 }
