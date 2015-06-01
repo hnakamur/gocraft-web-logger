@@ -46,7 +46,7 @@ func main() {
 
 	logWriter := os.Stderr
 	if logFileName != "-" {
-		logFile, err := os.Create(logFileName)
+		logFile, err := os.OpenFile(logFileName, os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
 			os.Stderr.WriteString(fmt.Sprintf("cannot open log file: %s\n", err))
 			os.Exit(1)
