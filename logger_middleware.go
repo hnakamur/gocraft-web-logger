@@ -1,15 +1,17 @@
 package logger
 
 import (
-	"log"
-	"os"
 	"time"
 
 	"github.com/gocraft/web"
+	"github.com/op/go-logging"
 )
 
-// Logger can be set to your own logger. Logger only applies to the LoggerMiddleware.
-var Logger = log.New(os.Stdout, "", 0)
+var log *logging.Logger
+
+func SetLogger(logger *logging.Logger) {
+	log = logger
+}
 
 // LoggerMiddleware is generic middleware that will log requests to Logger (by default, Stdout).
 func LoggerMiddleware(rw web.ResponseWriter, req *web.Request, next web.NextMiddlewareFunc) {
@@ -30,5 +32,5 @@ func LoggerMiddleware(rw web.ResponseWriter, req *web.Request, next web.NextMidd
 		durationUnits = "ns"
 	}
 
-	Logger.Printf("%s %d%s %d %s\n", startTime.Format(time.RFC3339), duration, durationUnits, rw.StatusCode(), req.URL.Path)
+	log.Info("duration:%d%s\tstatus:%d\tmessage:%s\n", duration, durationUnits, rw.StatusCode(), req.URL.Path)
 }
